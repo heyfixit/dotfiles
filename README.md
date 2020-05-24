@@ -2,7 +2,10 @@
 
 ## Usage
 
-`app install`
+1.  Copy `settings-example.yml` to `settings.yml`
+2.  Validate proper path mappings in `settings.yml`
+3.  Run `bin/install`
+  - Settings files are backed up before being overwritten by default
 
 ## Development
 
