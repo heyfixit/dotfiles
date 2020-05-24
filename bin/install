@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'yaml'
+
+def process_argv(option)
+  case option
+  when "-h"
+    puts "Script to copy dotfiles to their proper locations"
+    puts "  -v Enable verbose mode"
+    puts "  -f Copy without backing up existing files"
+    puts ""
+    puts "Reads path mappings from settings.yml"
+    puts "Copy settings-example.yml to settings.yml for a starting point."
+  when "-v"
+    @options[:verbose] = true
+  when "-f"
+    @options[:force] = true
+  end
+end
+
+@options = {}
+
+ARGV.each { |option| process_argv(option) }
+
+settings = YAML.load_file(File.join(File.dirname(__FILE__), "..", "settings.yml"))
+
+settings[:location_mappings].each do |k,v|
+  repo_path = File.join(File.dirname(__FILE__), "..", k)
+  target_path = File.join(Dir.home, v)
+  target_dir = File.dirname(target_path)
+
+  # If we're not forcing, backup anything that exists
+  if !@options[:force]
+    if File.file?(target_path)
+      ext = File.extname(target_path)
+      basename = File.basename(target_path, ext)
+      backup_path = File.join(target_dir, "#{basename}_backup_#{Time.now.to_i}#{".#{ext}" unless ext.length == 0}")
+      puts "Backing up #{target_path} to #{backup_path}" unless !@options[:verbose]
+      FileUtils.cp(target_path, backup_path)
+    end
+  end
+  
+  puts "Copying #{repo_path} to #{target_path}..." unless !@options[:verbose]
+  FileUtils.mkdir_p(target_dir) unless File.directory?(target_dir)
+
+  FileUtils.cp(repo_path,target_path)
+end
