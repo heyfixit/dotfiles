@@ -1,5 +1,7 @@
 ---
+# <relative path to conf from project root>:<relative path to conf from home>
 :location_mappings:
   "./nvim/init.vim": ".config/nvim/init.vim"
   "./zsh/zshrc": ".zshrc"
   "./kitty/config": ".config/kitty/config"
+  "./tmux/tmux.conf": ".tmux.conf"
