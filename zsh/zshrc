@@ -24,6 +24,7 @@ compinit
 
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
 export KEYTIMEOUT=1
+export EDITOR=nvim
 
 alias list-mono-fonts=fc-list : family spacing | grep -e spacing=100 -e spacing=90
 
@@ -49,7 +50,6 @@ bindkey -M vicmd "j" down-line-or-beginning-search # j goes down
 
 # CTRL-SHIFT-V to open command in $EDITOR
 bindkey -M vicmd "^V" edit-command-line
-
 
 # Functions
 
