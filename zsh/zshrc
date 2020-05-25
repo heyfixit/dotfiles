@@ -1,0 +1,67 @@
+# Zsh auto configuration
+export ZSH=$HOME/.oh-my-zsh
+ZSH_THEME="robbyrussell"
+CASE_SENSITIVE="true"
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
+
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt autocd extendedglob nomatch notify
+unsetopt beep
+bindkey -v
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/dude/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+# Lines configured by me
+
+# Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
+export KEYTIMEOUT=1
+export EDITOR=nvim
+
+alias list-mono-fonts=fc-list : family spacing | grep -e spacing=100 -e spacing=90
+
+# if ruby and rubygems exist, add the user-level gem bin dir to our PATH
+if which ruby >/dev/null && which gem >/dev/null; then
+    PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+fi
+
+# rbenv
+export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
+
+# Bindings
+
+# Better searching in command mode
+bindkey -M vicmd '?' history-incremental-search-backward # search backwards with ?
+bindkey -M vicmd '/' history-incremental-search-forward # search forwards with /
+
+# Beginning search with arrow keys
+bindkey "^[OA" up-line-or-beginning-search # up goes up in search results
+bindkey "^[OB" down-line-or-beginning-search # down goes down in search results
+bindkey -M vicmd "k" up-line-or-beginning-search # in cmd mode, k goes up in search results
+bindkey -M vicmd "j" down-line-or-beginning-search # j goes down
+
+# CTRL-SHIFT-V to open command in $EDITOR
+bindkey -M vicmd "^V" edit-command-line
+
+# Functions
+
+# Swap cursor shapes based on zsh vim mode - blocks for select and normal, bar for insert
+function zle-keymap-select zle-line-init zle-line-finish {
+  case $KEYMAP in
+	  vicmd) print -n '\033[1 q';; # block cursor
+	  viins|main) print -n '\033[5 q';; # line cursor
+  esac
+}
+
+zle -N zle-line-init
+zle -N zle-line-finish
+zle -N zle-keymap-select
+

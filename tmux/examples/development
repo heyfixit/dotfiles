@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Example development startup script
+
+# Check if development session already running
+tmux has-session -t development
+
+# if not, create it
+if [$? != 0]
+then
+	# create a session, name it development, name the initial window editor
+	tmux new-session -s development -n editor -d
+
+	# use tmux's send-keys command to change the current directory to our project
+	# C-m sends the carriage return sequence i.e. presses enter
+	tmux send-keys -t developoment 'cd ~/dev/tmux-dev-project' C-m
+
+	# use same approach to start Vim
+	tmux send-keys -t development 'nvim .' C-m
+
+	# split window for a terminal at the bottom
+	tmux split-window -v -t development
+
+	# use a default tmux layout and apply it to the session
+	tmux select-layout -t development main-horizontal
+
+	# send keys can target sessions, windows, and panes
+	# our config starts window indices at 1 and pane indices at 1
+	# target formatting: [session]:[window].[pane]
+	tmux send-keys -t development:1.2 'cd ~/dev/tmux-dev-project' C-m
+
+	# Creating and selecting windows
+	# we want a second window in our session that will be a full screen console
+	tmux new-window -n console -t development
+
+	# since only one pane in this second window, can leave off the pane number target
+	tmux send-keys -t development:2 'cd ~/dev/tmux-dev-project' C-m
+
+	# now we want our first window displayed on session start
+	tmux select-window -t development:1
+fi
+
+# attach to development
+tmux attach -t development
