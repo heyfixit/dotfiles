@@ -1,14 +1,7 @@
 # Dotfiles
 
 ## Prerequisites
-
-```
-=============
-Install Zplug
-=============
-
-curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-```
+List of prereqs at [PREREQS](PREREQS.md)
 
 ## Usage
 
