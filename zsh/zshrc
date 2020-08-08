@@ -22,9 +22,6 @@ compinit
 
 # Lines configured by me
 
-# Set POWERLINE_REPOSITORY_ROOT
-export POWERLINE_REPOSITORY_ROOT="$(ruby -e "puts \`pip show powerline-status\`.match(/Location: (.*)\n/) && \$1")"
-
 # Make Vi mode transitions faster (KEYTIMEOUT is in hundredths of a second)
 export KEYTIMEOUT=1
 export EDITOR=nvim
@@ -89,4 +86,4 @@ if ! zplug check --verbose; then
 	fi
 fi
 
-zplug load --verbose
+zplug load
