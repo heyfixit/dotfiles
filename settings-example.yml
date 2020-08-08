@@ -4,3 +4,7 @@
   "./nvim/init.vim": ".config/nvim/init.vim"
   "./zsh/zshrc": ".zshrc"
   "./tmux/tmux.conf": ".tmux.conf"
+  "./alacritty/alacritty.yml": ".alacritty.yml"
+  
+  # Modify your alacritty application shortcut to "alacritty -e $HOME/bin/start_tmux"
+  "./scripts/start_tmux": "bin/start_tmux"

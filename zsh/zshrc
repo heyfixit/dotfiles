@@ -26,18 +26,15 @@ compinit
 export KEYTIMEOUT=1
 export EDITOR=nvim
 
-# Start tmux by default
-if [ -z "$TMUX" ] && [ ${UID} != 0]
-then
-	tmux new-session -A -s default
-fi
-
 alias list-mono-fonts=fc-list : family spacing | grep -e spacing=100 -e spacing=90
 
 # if ruby and rubygems exist, add the user-level gem bin dir to our PATH
 if which ruby >/dev/null && which gem >/dev/null; then
     PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
 fi
+
+# user home bin folder
+export PATH=$HOME/bin:$PATH
 
 # rbenv
 export PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
