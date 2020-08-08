@@ -1,5 +1,15 @@
 # Dotfiles
 
+## Prerequisites
+
+```
+=============
+Install Zplug
+=============
+
+curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+```
+
 ## Usage
 
 1.  Copy `settings-example.yml` to `settings.yml`
