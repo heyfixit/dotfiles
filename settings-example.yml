@@ -2,10 +2,13 @@
 # <relative path to conf from project root>:<relative path to conf from home>
 :location_mappings:
   "./nvim/init.vim": ".config/nvim/init.vim"
+  "./nvim/autoload/utils.vim": ".config/nvim/autoload/utils.vim"
+  "./nvim/coc-settings.json": ".config/nvim/coc-settings"
   "./zsh/zshrc": ".zshrc"
   "./alacritty/alacritty.yml": ".alacritty.yml"
   "./tmux/tmux.conf": ".tmux.conf"
   "./tmux/tmux.conf.local": ".tmux.conf.local"
+  "./efm-langserver/config.yaml": "./config/efm-langserver/config.yaml"
 
   # Modify your alacritty application shortcut to "alacritty -e $HOME/bin/start_tmux"
   "./scripts/start_tmux": "bin/start_tmux"
