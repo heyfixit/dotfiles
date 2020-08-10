@@ -101,6 +101,31 @@ Plug 'vim-scripts/BufOnly.vim', { 'on': 'Bonly' }
 call plug#end()
 " ------------------------- End of Plugin Section ------------------------------
 """"""""""""""""""""""
+"  COC EXTENSIONS    "
+""""""""""""""""""""""
+let g:coc_global_extensions = [
+      \'coc-spell-checker',
+      \'coc-yaml',
+      \'coc-yank',
+      \'coc-snippets',
+      \'coc-stylelintplus',
+      \'coc-stylelint',
+      \'coc-actions',
+      \'coc-eslint',
+      \'coc-fzf-preview',
+      \'coc-tsserver',
+      \'coc-metals',
+      \'coc-sh',
+      \'coc-lua',
+      \'coc-markdownlint',
+      \'coc-highlight',
+      \'coc-python',
+      \'coc-explorer',
+      \'coc-json', 
+      \'coc-git'
+      \]
+
+""""""""""""""""""""""
 "  GENERAL SETTINGS  "
 """"""""""""""""""""""
 "" Basic
@@ -193,7 +218,7 @@ if has('nvim')
   let g:loaded_python_provider=1                        " Disable python 2 interface
   let g:python_host_skip_check=1                        " Skip python 2 host check
   " let g:python3_host_prog='/usr/bin/python3'            " Set python 3 host program linux
-  let g:python3_host_prog='/usr/local/bin/python3'            " Set python 3 host program mac
+  let g:python3_host_prog='/usr/bin/python3'            " Set python 3 host program mac
   set inccommand=nosplit                                " Live preview of substitutes and other similar commands
 endif
 
@@ -220,7 +245,7 @@ let $LANG = 'en_US'
 """""""""""""""""""""
 "  PLUGIN SETTINGS  "
 """""""""""""""""""""
-""
+"" FZF
 let $FZF_DEFAULT_OPTS='--reverse'
 let $FZF_DEFAULT_COMMAND='ag --skip-vcs-ignores --ignore node_modules -g ""'
 let g:fzf_layout = { 'window': 'enew' }
@@ -280,6 +305,7 @@ if has("patch-8.1.1564")
 else
   set signcolumn=yes
 endif
+
 """"""""""""""
 "  MAPPINGS  "
 """"""""""""""
@@ -648,7 +674,7 @@ if has('nvim')
 else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
-
+nmap <f1> :CocCommand explorer<CR>
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.

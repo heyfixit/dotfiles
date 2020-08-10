@@ -1,4 +1,6 @@
-```
+# Prerequisites
+
+```txt
 =============
 Install Zplug
 =============
