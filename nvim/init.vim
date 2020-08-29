@@ -234,7 +234,7 @@ if has('termguicolors')
 endif
 
 "" Colors
-colorscheme gruvbox
+colorscheme onedark
 syntax on
 syntax enable
 
@@ -245,6 +245,9 @@ hi! link BufTabLineCurrent Identifier
 hi! link BufTabLineActive Comment
 hi! link BufTabLineHidden Comment
 hi! link BufTabLineFill Comment
+
+" Coc-Git gutter colors
+hi! DiffChange cterm=NONE  gui=NONE
 
 "" Language Settings
 let $LANG = 'en_US'
@@ -637,15 +640,14 @@ nmap ,w <Plug>(easymotion-overwin-w)
 
 "" Conquer of Code / CoC.nvim
 " Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+nmap <leader>m <Plug>(coc-codeaction)
 
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+" Remap for do codeAction of selected region
+xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -710,7 +712,7 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 " Mappings for CoCList
 " Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <space>d  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
@@ -742,7 +744,9 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
-
+function! s:cocActionsOpenFromSelected(type) abort
+  execute 'CocCommand actions.open ' . a:type
+endfunction
 "" Move or Split
 function! WinMove(key)
     let t:curwin = winnr()
@@ -850,7 +854,6 @@ function! VimFolds(lnum)
     endif
   endif
 endfunction
-
 """ defines a foldtext
 function! VimFoldText()
   " handle special case of normal comment first
@@ -878,3 +881,6 @@ augroup fold_vimrc
                    \ setlocal foldtext=VimFoldText() |
      "              \ set foldcolumn=2 foldminlines=2
 augroup END
+
+
+
