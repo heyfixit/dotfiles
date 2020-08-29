@@ -42,17 +42,17 @@ tmux_conf_new_session_prompt=false
 
 
 # -- display -------------------------------------------------------------------
-custom_black="#1d2021"
-custom_white="#f9f5d7"
-custom_red="#cc241d"
-custom_green="#98971a"
-custom_yellow="#d79921"
+custom_black="#282c34"
+custom_white="#abb2bf"
+custom_red="#e06c75"
+custom_green="#98c379"
+custom_yellow="#d19a66"
 custom_orange="#d65d0e"
-custom_blue="#458588"
-custom_cyan="#689d6a"
-custom_purple="#b16286"
-custom_visual_grey="#928374"
-custom_comment_grey="#928374"
+custom_blue="#61afef"
+custom_cyan="#56b6c2"
+custom_purple="#c678dd"
+custom_visual_grey="#5c6370"
+custom_comment_grey="#5c6370"
 
 # RGB 24-bit colour support (tmux >= 2.2), possible values are:
 #  - true
