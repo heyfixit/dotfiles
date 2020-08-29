@@ -50,6 +50,10 @@ Plug 'wesQ3/vim-windowswap'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Lightline (simple status line)
 Plug 'itchyny/lightline.vim'
+" Vim Start Screen
+Plug 'mhinz/vim-startify'
+" Vim Which Key
+Plug 'liuchengxu/vim-which-key'
 "" Extra Text Objects
 " Custom text objects creation (dependency for the latter)
 Plug 'kana/vim-textobj-user'
@@ -81,6 +85,8 @@ Plug 'ferranpm/vim-isolate', { 'on':  ['Isolate', 'UnIsolate'] }
 Plug 'zef/vim-cycle'
 " Titlecase motion (gt) turns this into Turns This Into
 Plug 'christoomey/vim-titlecase'
+" Floating terminal windows
+Plug 'voldikss/vim-floaterm'
 "" Miscellaneous
 " Easily expand selected region
 Plug 'terryma/vim-expand-region'
