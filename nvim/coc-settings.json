@@ -68,6 +68,15 @@
       "expand",
       "open"
     ],
+    "o": [
+      "expandable?",
+      "expand",
+      "open"
+    ],
     "v": "open:vsplit"
-  }
+  },
+  "diagnostic.errorSign": "💥",
+  "diagnostic.infoSign": "🤔",
+  "diagnostic.warningSign": "🤖",
+  "diagnostic.hintSign": "💡"
 }
