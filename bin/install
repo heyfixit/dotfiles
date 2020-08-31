@@ -27,7 +27,13 @@ settings = YAML.load_file(File.join(File.dirname(__FILE__), "..", "settings.yml"
 
 settings[:location_mappings].each do |k,v|
   repo_path = File.join(File.dirname(__FILE__), "..", k)
-  target_path = File.join(Dir.home, v)
+  target = nil
+  if v.class == Hash
+    target = v[:target]
+  else
+    target = v
+  end
+  target_path = File.join(Dir.home, target)
   target_dir = File.dirname(target_path)
 
   # If we're not forcing, backup anything that exists
@@ -45,4 +51,7 @@ settings[:location_mappings].each do |k,v|
   FileUtils.mkdir_p(target_dir) unless File.directory?(target_dir)
 
   FileUtils.cp(repo_path,target_path)
+
+  # Append output of post_copy_append command if one exists for this hash
+  `#{v[:post_copy_append]} >> #{target_path}` if v.class == Hash && v[:post_copy_append]
 end
