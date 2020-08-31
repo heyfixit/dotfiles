@@ -54,6 +54,10 @@ Plug 'itchyny/lightline.vim'
 Plug 'mhinz/vim-startify'
 " Vim Which Key
 Plug 'liuchengxu/vim-which-key'
+" Project-wide find/replace wit Ag
+Plug 'dyng/ctrlsf.vim'
+" FZF
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 "" Extra Text Objects
 " Custom text objects creation (dependency for the latter)
 Plug 'kana/vim-textobj-user'
@@ -128,7 +132,8 @@ let g:coc_global_extensions = [
       \'coc-python',
       \'coc-explorer',
       \'coc-json', 
-      \'coc-git'
+      \'coc-git',
+      \'coc-emmet',
       \]
 
 """"""""""""""""""""""
@@ -185,7 +190,7 @@ set splitright                              " Splitting a window will put the ne
 
 "" TimeOut Settings
 " Time out on key codes but not mappings. Basically this makes terminal Vim work sanely. (by Steve Losh)
-set notimeout
+" set notimeout
 set ttimeout
 set ttimeoutlen=10
 
@@ -254,7 +259,15 @@ let $LANG = 'en_US'
 """""""""""""""""""""
 "  PLUGIN SETTINGS  "
 """""""""""""""""""""
+"" WindowSwap
+let g:windowswap_map_keys = 0 "prevent default bindings
+"" WhichKey
+" No Floating Windows
+let g:which_key_use_floating_win = 0
+set timeoutlen=500
+
 "" FZF
+set rtp+=/home/dude/.zplug/bin/fzf
 let $FZF_DEFAULT_OPTS='--reverse'
 let $FZF_DEFAULT_COMMAND='ag --skip-vcs-ignores --ignore node_modules -g ""'
 let g:fzf_layout = { 'window': 'enew' }
@@ -295,6 +308,18 @@ let g:ctrlsf_position='bottom'
 let g:ctrlsf_winsize = '30%'
 let g:ctrlsf_auto_close=0
 let g:ctrlsf_regex_pattern=0
+let g:ctrlsf_mapping = {
+      \ 'next'    : 'n',
+      \ 'prev'    : 'N',
+      \ 'quit'    : 'q',
+      \ 'openb'   : '',
+      \ 'split'   : 's',
+      \ 'tab'     : '',
+      \ 'tabb'    : '',
+      \ 'popen'   : '',
+      \ 'pquit'   : '',
+      \ 'loclist' : '',
+      \ }
 
 "" VimPlug
 let g:plug_timeout=20
@@ -319,7 +344,7 @@ endif
 "  MAPPINGS  "
 """"""""""""""
 "" Setting Leader/mapleader
-let g:mapleader="\<space>"
+let g:mapleader="\<Space>"
 
 "" Disable Some Default Mappings
 nnoremap <up> <NOP>
@@ -336,145 +361,6 @@ nnoremap <Space> <NOP>
 inoremap <F1> <NOP>
 nnoremap <F1> <NOP>
 nnoremap Q <NOP>
-
-"" Vim Default Overrides
-" Easier window switching
-nmap <silent> <C-w><C-w> :call utils#intelligentCycling()<CR>
-
-nnoremap <silent> <C-h> :call WinMove('h')<cr>
-nnoremap <silent> <C-j> :call WinMove('j')<cr>
-nnoremap <silent> <C-k> :call WinMove('k')<cr>
-nnoremap <silent> <C-l> :call WinMove('l')<cr>
-
-" Visual linewise up and down by default (and use gj gk to go quicker)
-nnoremap j gj
-nnoremap k gk
-nnoremap gj 5j
-nnoremap gk 5k
-vnoremap j gj
-vnoremap k gk
-vnoremap gj 5j
-vnoremap gk 5k
-
-" When jump to next match also center screen
-" Note: Use :norm! to make it count as one command. (i.e. for i_CTRL-o)
-nnoremap <silent> n :norm! nzz<CR>
-nnoremap <silent> N :norm! Nzz<CR>
-vnoremap <silent> n :norm! nzz<CR>
-vnoremap <silent> N :norm! Nzz<CR>
-
-" Same when moving up and down
-nnoremap <C-u> <C-u>zz
-nnoremap <C-d> <C-d>zz
-nnoremap <C-f> <C-f>zz
-nnoremap <C-b> <C-b>zz
-vnoremap <C-u> <C-u>zz
-vnoremap <C-d> <C-d>zz
-vnoremap <C-f> <C-f>zz
-vnoremap <C-b> <C-b>zz
-
-" Remap H and L (top, bottom of screen to left and right end of line)
-nnoremap H ^
-nnoremap L $
-vnoremap H ^
-vnoremap L g_
-
-" More logical Y (default was alias for yy)
-nnoremap Y y$
-
-" Use CamelCaseMotion instead of default motions
-map <silent> w <Plug>CamelCaseMotion_w
-map <silent> b <Plug>CamelCaseMotion_b
-map <silent> e <Plug>CamelCaseMotion_e
-map <silent> ge <Plug>CamelCaseMotion_ge
-sunmap w
-sunmap b
-sunmap e
-sunmap ge
-
-" Fix the cw at the end of line bug default vim has special treatment (:help cw)
-nmap cw ce
-nmap dw de
-
-" Uppercase word in insert mode
-" inoremap <C-u> <ESC>mzgUiw`za
-" Uppercase word in insert mode in a way that doesn't break snippet tabstops
-inoremap <C-u> <Esc>gUawea
-
-" Matching brackets with TAB (using matchit) (Breaks the <C-i> jump)
-map <TAB> %
-silent! unmap [%
-silent! unmap ]%
-
-" Don't cancel visual select when shifting
-xnoremap <  <gv
-xnoremap >  >gv
-
-" Stay down after creating fold
-vnoremap zf mzzf`zzz
-
-" Make . work with visually selected lines
-xnoremap . :norm.<CR>
-
-"" Common Tasks
-" Turn off Highlighting
-nnoremap ,l :nohl<cr>
-
-" Quick save and close buffer
-nnoremap <silent> ,c :Sayonara!<CR>
-nnoremap <silent> ,q :Sayonara<CR>
-
-" Yank and paste from clipboard
-nnoremap ,y "+y
-vnoremap ,y "+y
-nnoremap ,yy "+yy
-nnoremap ,p "+p
-
-" Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
-" CTags generation / navigation (:tselect to select from menu)
-nnoremap ]t :tn<CR>
-nnoremap [t :tp<CR>
-nnoremap ,ts :ts<CR>
-nnoremap ,tg :GTags<CR>
-
-" QuickFix navigation
-nnoremap ]q :cnext<CR>
-nnoremap [q :cprevious<CR>
-
-" Location list navigation
-nnoremap ]l :lnext<CR>
-nnoremap [l :lprevious<CR>
-
-" Error mnemonic (Neomake uses location list)
-nnoremap ]e :lnext<CR>
-nnoremap [e :lprevious<CR>
-
-" Reselect last-pasted text
-nnoremap gl `[v`]
-
-" Keep the cursor in place while joining lines
-nnoremap J mzJ`z
-
-" [S]plit line (sister to [J]oin lines) S is covered by cc.
-nnoremap S mzi<CR><ESC>`z
-
-" Easier fold toggling
-nnoremap ,z za
-
-" Start substitute on current word under the cursor
-nnoremap ,s :%s///gc<Left><Left><Left>
-
-" Start search on current word under the cursor
-nnoremap ,/ /<CR>
-
-" Start reverse search on current word under the cursor
-nnoremap ,? ?<CR>
-
-" Faster sort
-vnoremap ,s :!sort<CR>
 
 "" F-Keys
 " F2 to turn off relativenum and allow highlighting
@@ -500,66 +386,116 @@ nnoremap <silent> <F9> :call VrcQuery()<CR>
 " Informative echo
 nnoremap <F12> :call utils#showToggles()<CR>
 
-"" Window/Buffer Management
-" Intelligent windows resizing using ctrl + arrow keys
-nnoremap <silent> <C-Right> :call utils#intelligentVerticalResize('right')<CR>
-nnoremap <silent> <C-Left> :call utils#intelligentVerticalResize('left')<CR>
-nnoremap <silent> <C-Up> :resize +1<CR>
-nnoremap <silent> <C-Down> :resize -1<CR>
+"" Mappings WhichKey Can't Handle
+" For cases like a mapping that's different in visual mode
+" Or insert mode mappings
+" Or single-key mappings
 
-" Buffers navigation and management
-nnoremap <silent> + :bn<CR>
-nnoremap <silent> _ :bp<CR>
+" Quick jump to other splits via Control-h,j,k,l
+nnoremap <silent> <C-h> :call WinMove('h')<cr>
+nnoremap <silent> <C-j> :call WinMove('j')<cr>
+nnoremap <silent> <C-k> :call WinMove('k')<cr>
+nnoremap <silent> <C-l> :call WinMove('l')<cr>
 
-"" Add ; to end of line with <C-l> in insert mode
-inoremap <silent><C-l> <Esc>v`^me<Esc>gi<C-o>:call Ender()<CR>
+" Visual linewise up and down by default (and use gj gk to go quicker)
+nnoremap j gj
+nnoremap k gk
+nnoremap gj 5j
+nnoremap gk 5k
+vnoremap j gj
+vnoremap k gk
+vnoremap gj 5j
+vnoremap gk 5k
 
-"""""""""""""""""""""
-"  PLUGIN MAPPINGS  "
-"""""""""""""""""""""
-"" FZF
-" " Search files recursively ([o]pen file)
-" nnoremap <silent> <leader>o :Files<CR>
-" " Search git status (edited) [f]iles
-" nnoremap <silent> <leader>f :GFiles?<CR>
-" " Search in local buffer [c]ommits
-" nnoremap <silent> <leader>c :BCommits<CR>
-" " Search in all the project [C]ommits
-" nnoremap <silent> <leader>C :Commits<CR>
-" " Search between open files - [b]uffers
-" nnoremap <silent> <leader>b :Buffers<CR>
-" " Search in [l]ines on current buffer
-" nnoremap <silent> <leader>l :BLines<CR>
-" " Search in all the opened buffers [L]ines
-" nnoremap <silent> <leader>L :Lines<CR>
-" " Search in ultisnips [s]nippets
-" nnoremap <silent> <leader>s :Snippets<CR>
-" " Search in [m]arks
-" nnoremap <silent> <leader>m :Marks<CR>
-" " Search in edited files [h]istory
-" nnoremap <silent> <leader>h :History<CR>
-" " Search in search [/] history
-" nnoremap <silent> <leader>/ :History/<CR>
-" " Search in ag search
-" nnoremap <silent> <leader>a :Ag
+" Uppercase word in insert mode in a way that doesn't break snippet tabstops
+inoremap <C-u> <Esc>gUawea
 
-" "" UltiSnips
-" " Disable built-in cx-ck to be able to go backward
-" inoremap <C-x><C-k> <NOP>
-" let g:UltiSnipsExpandTrigger='<C-j>'
-" let g:UltiSnipsListSnippets='<C-s>'
-" let g:UltiSnipsJumpForwardTrigger='<C-j>'
-" let g:UltiSnipsJumpBackwardTrigger='<C-k>'
+" Matching brackets with TAB (using matchit) (Breaks the <C-i> jump)
+map <TAB> %
+silent! unmap [%
+silent! unmap ]%
 
-"" Isolate
-vnoremap ,i :Isolate<CR>
-nnoremap ,u :UnIsolate<CR>
+" Don't cancel visual select when shifting
+xnoremap <  <gv
+xnoremap >  >gv
 
-"" Expand region
+" Stay down after creating fold
+vnoremap zf mzzf`zzz
+
+" Make . work with visually selected lines
+xnoremap . :norm.<CR>
+
+" Fix the cw at the end of line bug default vim has special treatment (:help cw)
+nmap cw ce
+nmap dw de
+
+" Use CamelCaseMotion instead of default motions
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+map <silent> ge <Plug>CamelCaseMotion_ge
+sunmap w
+sunmap b
+sunmap e
+sunmap ge
+
+" Remap H and L (top, bottom of screen to left and right end of line)
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L g_
+
+" More logical Y (default was alias for yy)
+nnoremap Y y$
+
+" When jump to next match also center screen
+" Note: Use :norm! to make it count as one command. (i.e. for i_CTRL-o)
+" zz centers cursor
+nnoremap <silent> n :norm! nzz<CR>
+nnoremap <silent> N :norm! Nzz<CR>
+vnoremap <silent> n :norm! nzz<CR>
+vnoremap <silent> N :norm! Nzz<CR>
+
+" Same when moving up and down
+nnoremap <C-u> <C-u>zz
+nnoremap <C-d> <C-d>zz
+nnoremap <C-f> <C-f>zz
+nnoremap <C-b> <C-b>zz
+vnoremap <C-u> <C-u>zz
+vnoremap <C-d> <C-d>zz
+vnoremap <C-f> <C-f>zz
+vnoremap <C-b> <C-b>zz
+
+"" WhichKey Mappings and Dictionaries
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+vnoremap <silent> <leader> :<c-u> WhichKeyVisual '<Space>'<CR>
+nnoremap <silent> , :WhichKey ','<CR>
+vnoremap <silent> , :<c-u> WhichKeyVisual ','<CR>
+nnoremap <silent> [ :WhichKey '['<CR>
+vnoremap <silent> [ :<c-u> WhichKeyVisual '['<CR>
+nnoremap <silent> ] :WhichKey ']'<CR>
+vnoremap <silent> ] :<c-u> WhichKeyVisual ']'<CR>
+nnoremap <silent> g :WhichKey 'g'<CR>
+vnoremap <silent> g :<c-u> WhichKeyVisual 'g'<CR>
+
+" Yank and paste from clipboard
+nnoremap ,y "+y
+vnoremap ,y "+y
+nnoremap ,yy "+yy
+nnoremap ,p "+p
+
+" Move visual block
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Reselect last-pasted text
+nnoremap gl `[v`]
+
+"" Expand region intelligently via spamming v
 vmap v <Plug>(expand_region_expand)
 vmap <C-v> <Plug>(expand_region_shrink)
 
-"" Argumentative
+"" Argumentative select and shuffle argument lists
 xmap ia <Plug>Argumentative_InnerTextObject
 xmap aa <Plug>Argumentative_OuterTextObject
 omap ia <Plug>Argumentative_OpPendingInnerTextObject
@@ -571,61 +507,11 @@ xmap ]a <Plug>Argumentative_XNext
 nmap <a <Plug>Argumentative_MoveLeft
 nmap >a <Plug>Argumentative_MoveRight
 
-"" CtrlSF / ctrlsf
-nnoremap <leader>g :CtrlSF<Space>
-nnoremap <leader>G :CtrlSFToggle<Space>
-let g:ctrlsf_mapping = {
-      \ 'next'    : 'n',
-      \ 'prev'    : 'N',
-      \ 'quit'    : 'q',
-      \ 'openb'   : '',
-      \ 'split'   : 's',
-      \ 'tab'     : '',
-      \ 'tabb'    : '',
-      \ 'popen'   : '',
-      \ 'pquit'   : '',
-      \ 'loclist' : '',
-      \ }
-nnoremap <silent> ,g :call utils#searchCurrentWordWithAg()<CR>
+"" [t]abularize
+vnoremap ,t :Tabularize /
 
-
-"" BufOnly -> [C]lose all
-nnoremap ,C :Bonly<CR>
-
-"" Tabularize -> [a]lign
-vnoremap ,a :Tabularize /
-
-"" JsDoc / jsdoc -> [D]ocument Function
-nnoremap ,d :JsDoc<CR>
-
-"" Mundo [u]ndo
-nnoremap <silent> <leader>u :MundoToggle<CR>
-
-"" Denite
-" Show MiniYank History
-nnoremap <silent> \Y :<C-u>Denite miniyank<cr>
-" Show extension list
-nnoremap <silent> \e  :<C-u>Denite coc-extension<cr>
-" Show symbols of current buffer
-nnoremap <silent> \o  :<C-u>Denite coc-symbols<cr>
-" Search symbols of current workspace
-nnoremap <silent> \t  :<C-u>Denite coc-workspace<cr>
-" Show diagnostics of current workspace
-nnoremap <silent> \a  :<C-u>Denite coc-diagnostic<cr>
-" Show available commands
-nnoremap <silent> \c  :<C-u>Denite coc-command<cr>
-" Show available services
-nnoremap <silent> \s  :<C-u>Denite coc-service<cr>
-" Show links of current buffer
-nnoremap <silent> \l  :<C-u>Denite coc-link<cr>
-
-"" Emmet
-let g:user_emmet_leader_key='<M-y>'
-let g:user_emmet_settings = {
-      \ 'javascript.jsx' : {
-      \ 'extends' : 'jsx',
-      \ },
-    \}
+"" CtrlSF
+nnoremap <leader>G :CtrlSF<Space>
 
 "" EasyMotion
 " Jump to anywhere on screen with ,e{char}{label}
@@ -640,32 +526,56 @@ nmap ,w <Plug>(easymotion-overwin-w)
 
 "" Conquer of Code / CoC.nvim
 " Remap for do codeAction of current line
-nmap <leader>m <Plug>(coc-codeaction)
+nmap <silent> <leader>ca :CocAction<CR>
 
 " Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
+nmap <leader>cq  <Plug>(coc-fix-current)
 
 " Remap for do codeAction of selected region
-xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+xmap <silent> <leader>cs :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+nmap <silent> <leader>cs :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 
 " Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>cr <Plug>(coc-rename)
 
 " remap for format selected region
-vmap <space>f <Plug>(coc-format-selected)
-nmap <space>f <Plug>(coc-format-selected)
+vmap <space>cf <Plug>(coc-format-selected)
+nmap <space>cf <Plug>(coc-format-selected)
 
-" Create mappings for function text object
+" format buffer
+nmap <space>cF :Format<CR>
+
+" organize imports
+nmap <space>cO :OR<CR>
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
 xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
 omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
 omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
 
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>La  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>Le  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>Lc  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>Lo  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>Ls  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>Lj  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>Lk  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>Lp  :<C-u>CocListResume<CR>
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -682,7 +592,7 @@ if has('nvim')
 else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
-nmap <f1> :CocCommand explorer<CR>
+
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 " <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
@@ -694,8 +604,11 @@ endif
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nmap <silent> [e <Plug>(coc-diagnostic-prev)
+nmap <silent> ]e <Plug>(coc-diagnostic-next)
+
+"F1 for coc-explorer
+nmap <f1> :CocCommand explorer<CR>
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
@@ -703,31 +616,141 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> <leader>cK :call <SID>show_documentation()<CR>
 
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>d  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+"" Defining a bunch of WhichKey dictionaries
+let g:which_key_leader_map = {
+      \ 'u' : [':MundoToggle', 'toggle mundo'],
+      \ }
 
+let g:which_key_leader_map.L = {
+      \ 'name' : '+list',
+      \ 'a' : 'diagnostics',
+      \ 'e' : 'extensions',
+      \ 'c' : 'commands',
+      \ 'o' : 'outline',
+      \ 's' : 'symbols',
+      \ 'j' : 'default action next item',
+      \ 'k' : 'default action prev item',
+      \ 'p' : 'resume latest coc list',
+      \ }
+
+let g:which_key_leader_map.c = {
+      \ 'name': '+CoC',
+      \ 'a' : 'code action line',
+      \ 'c' : [':CocCommand', 'command menu'],
+      \ 's' : 'code action selection',
+      \ 'q' : 'quickfix line',
+      \ 'r' : 'rename symbol',
+      \ 'f' : 'format selected',
+      \ 'F' : 'format buffer',
+      \ 'O' : 'organize imports',
+      \ 'K' : 'show documentation(K)',
+      \ }
+
+" Start defining dictionaries based on trigger key
+" <leader>w to trigger split actions
+let g:which_key_leader_map.w = {
+      \ 'name' : '+windows/splits' ,
+      \ 'c' : [':call utils#intelligentCycling()' , 'cycle windows' ],
+      \ 'y' : [':call WindowSwap#MarkWindowSwap()', 'mark swap' ],
+      \ 'p' : [':call WindowSwap#DoWindowSwap()', 'swap w/marked' ],
+      \ }
+" <leader>f to trigger fold actions
+let g:which_key_leader_map.f = {
+      \ 'name' : '+folds' ,
+      \ 'C' : ['zM', 'close all folds(zM)'],
+      \ 't' : ['za', 'toggle fold(za)'],
+      \ 'c' : ['zc', 'close fold(zc)'],
+      \ 'o' : ['zo', 'open fold(zo)'],
+      \ 'O' : ['zR', 'open all folds(zR)'],
+      \ 'f' : ['mzzf`zzz', 'create fold(zf)'],
+      \ }
+
+" <leader>l to trigger line actions
+let g:which_key_leader_map.l = {
+      \ 'name' : '+line',
+      \ 'S' : ['mzi<CR><ESC>`z', 'Split line(S)'],
+      \ 'J' : ['mzJ`z', 'Join line(J)'],
+      \ }
+
+" <leader>m to trigger misc actions
+let g:which_key_leader_map.m = {
+      \ 'name' : '+misc',
+      \ 'h' : [':call ToggleHighlight()', 'toggle visible highlight(F2)'],
+      \ 's' : [':CocCommand cSpell.toggleEnableSpellChecker', 'toggle spellchecker(F4)'],
+      \ 'e' : ['e $MYNVIMRC', 'edit config(F5)'],
+      \ 'y' : [':<C-u>Denite miniyank', 'miniyank'],
+      \ }
+
+let g:which_key_leader_map.s = {
+      \ 'name' : '+search',
+      \ 'f' : [':Files', 'files'],
+      \ 'g' : [':GFiles?', 'git files'],
+      \ 'G' : 'CtrlSF',
+      \ 'c' : [':BCommits', 'buffer commits'],
+      \ 'C' : [':Commits', 'all commits'],
+      \ 'b' : [':Buffers', 'buffers'],
+      \ 'l' : [':BLines', 'current buffer lines'],
+      \ 'L' : [':Lines', 'all buffer lines'],
+      \ 's' : [':Snippets', 'snippets'],
+      \ 'm' : [':Marks', 'marks'],
+      \ 'h' : [':History', 'edited file hist'],
+      \ '/' : [':History/', '/ history'],
+      \ 'a' : [':Ag', 'Ag Search'],
+      \ }
+
+" comma actions
+let g:which_key_comma_map = {
+      \ 's' : 'substitute current word / sort selection',
+      \ '/' : ['/', 'search current word'],
+      \ '?' : ['?', 'reverse-search current word'],
+      \ 'y' : 'yank to clipboard',
+      \ 'yy' : 'yank  line to clipboard',
+      \ 'p' : 'paste from clipboard',
+      \ 'l' : [':nohl', 'turn off highlighting'],
+      \ 'c' : [':Sayonara!', 'delete buffer, close window'],
+      \ 'q' : [':Sayonara', 'delete buffer, preserve window'],
+      \ 'i' : [':Isolate', 'isolate selection'],
+      \ 'u' : [':UnIsolate', 'unisolate'],
+      \ 'g' : [':call utils#searchCurrentWordWithAg()', 'Ag search word'],
+      \ 'C' : [':Bonly', 'BuffOnly'],
+      \ 't' : 'Tabularize',
+      \ 'd' : [':JsDoc', 'JsDoc'],
+      \ 'e' : 'easymotion overwin2',
+      \ 'j' : 'easymotion down',
+      \ 'k' : 'easymotion up',
+      \ 'w' : 'easymotion within line',
+      \ }
+
+" brackets
+let g:which_key_lbracket_map = {
+      \ 'q' : [':cprevious', 'prev quickfix'],
+      \ 'l' : [':lprevious', 'prev locationlist'],
+      \ 'd' : 'prev diagnostic',
+      \ 'a' : 'move arg left',
+      \ }
+
+let g:which_key_rbracket_map = {
+      \ 'q' : [':cnext', 'next quickfix'],
+      \ 'l' : [':lnext', 'next locationlist'],
+      \ 'd' : 'next diagnostic',
+      \ 'a' : 'move arg right',
+      \ }
+
+let g:which_key_g_map = {
+      \ 'l' : 'reselect last-pasted',
+      \ 'g' : [':0', 'goto line 1'],
+      \ }
+
+" Register WhichKey
+call which_key#register(' ', "g:which_key_leader_map")
+call which_key#register(',', "g:which_key_comma_map")
+call which_key#register('[', "g:which_key_lbracket_map")
+call which_key#register(']', "g:which_key_rbracket_map")
+call which_key#register('g', "g:which_key_g_map")
 """""""""""""""
 "  FUNCTIONS  "
 """""""""""""""
@@ -764,6 +787,10 @@ endfunction
 """"""""""""""
 "  COMMANDS  "
 """"""""""""""
+"" Hide WhichKey Statusline
+autocmd! FileType which_key
+autocmd FileType which_key set laststatus=0 noshowmode noruler
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 "" CoC Commands
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
@@ -785,13 +812,16 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
+command! -nargs=0 NextDiagnostic :call CocAction('diagnosticNext')<CR>
+command! -nargs=0 PrevDiagnostic :call CocAction('diagnosticPrevious')<CR>
+
 "" Capturing Output of vim commands
 "Examples:
-":Page version
-":Page messages
-":Page ls
-"It also works with the :!cmd command and Ex special characters like % (cmdline-special)
-":Page !wc %
+" :Page version
+" :Page messages
+" :Page ls
+" It also works with the :!cmd command and Ex special characters like % (cmdline-special)
+" :Page !wc %
 "Capture and return the long output of a verbose command.
 function! s:Redir(cmd)
    let output = ""
@@ -811,7 +841,7 @@ function! s:Scratch()
    return bufnr("%")
 endfunction
 
-"Put the output of acommand into a scratch buffer.
+"Put the output of a command into a scratch buffer.
 function! s:Page(command)
    let output = s:Redir(a:command)
    call s:Scratch()
@@ -884,3 +914,5 @@ augroup END
 
 
 
+" Fix for KiTTY background color erase
+let &t_ut=''
