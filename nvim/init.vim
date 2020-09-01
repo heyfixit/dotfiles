@@ -650,6 +650,14 @@ let g:which_key_leader_map.c = {
       \ 'K' : 'show documentation(K)',
       \ }
 
+let g:which_key_leader_map.c.w = {
+      \ 'name' : '+Word',
+      \ 'a' : [':CocCommand cSpell.addWordToWorkspaceDictionary', 'add word local'],
+      \ 'i' : [':CocCommand cSpell.addIgnoreWordToFolder', 'ignore word local'],
+      \ 'A' : [':CocCommand cSpell.addWordToUserDictionary', 'add word global'],
+      \ 'I' : [':CocCommand cSpell.addIgnoreWordToUser', 'ignore word global'],
+      \ }
+
 " Start defining dictionaries based on trigger key
 " <leader>w to trigger split actions
 let g:which_key_leader_map.w = {
@@ -751,6 +759,7 @@ call which_key#register(',', "g:which_key_comma_map")
 call which_key#register('[', "g:which_key_lbracket_map")
 call which_key#register(']', "g:which_key_rbracket_map")
 call which_key#register('g', "g:which_key_g_map")
+
 """""""""""""""
 "  FUNCTIONS  "
 """""""""""""""
