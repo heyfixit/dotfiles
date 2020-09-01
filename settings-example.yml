@@ -10,6 +10,7 @@
   "./tmux/tmux.conf.local": ".tmux.conf.local"
   "./efm-langserver/config.yaml": ".config/efm-langserver/config.yaml"
   "./fontconfig/fonts.conf": ".config/fontconfig/fonts.conf"
+  "./nvim/cSpell.json": ".vim/cSpell.json"
 
   # Modify your alacritty application shortcut to "alacritty -e $HOME/bin/start_tmux"
   "./scripts/start_tmux": "bin/start_tmux"
